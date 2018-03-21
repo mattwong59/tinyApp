@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>TinyApp</title>
+</head>
+<body>
+
+
+
+  <header>
+    <% include ./partials/_header.ejs %>
+  </header>
+
+  <!-- Section for displaying all the short urls and longurls with Delete button -->
+  <ul>
+    <% Object.keys(urls).forEach(function (key) { %>
+    <li>
+     <form method="POST" action="/urls/<%= key %>/delete">
+      <a href="#">http://localhost:8080/<%= key %></a> - (<%= urls[key] %>)
+      <button type="submit">Delete</button>
+      </form>
+    </li>
+    <%  }); %>
+  <!-- Section finished -->
+
+<!--    <% for(key in urls) { %>
+   <li><%= key %> - <%= urls[key] %></li>
+   <% } %> -->
+
+  </ul>
+  <a href="">Shorten New URL</a>
+</body>
+</html>
