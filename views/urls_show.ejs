@@ -11,7 +11,7 @@
   </header>
   <form method="POST" action="/urls/<%= shortURL %>">
     <label for="updateURL"><h2>ShortURL: <%=shortURL %></h2></label>
-    <input id="newURL" type="text" name="newURL" placeholder= "<%= longURL %>" style= "width: 300px">
+    <input id="newURL" type="text" name="newURL" value= "<%= longURL %>" style= "width: 300px">
     <button type="submit">Update</button>
     <ul>
        <li><%= shortURL %>: <%= longURL %></li>
