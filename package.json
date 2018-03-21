@@ -1,0 +1,24 @@
+{
+  "name": "tinyapp",
+  "version": "0.1.0",
+  "description": "schoolwork that is tiny and also an app",
+  "main": "express_server.js",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "cookie-parser": "^1.4.3",
+    "ejs": "^2.5.7",
+    "express": "^4.16.3"
+  },
+  "devDependencies": {
+    "nodemon": "^1.17.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mattwong59/tinyApp.git"
+  },
+  "author": "",
+  "license": "ISC"
+}
