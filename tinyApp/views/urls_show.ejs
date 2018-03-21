@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>TinyApp</title>
+</head>
+<body>
+
+  <header>
+    <% include ./partials/_header.ejs %>
+
+  </header>
+  <form method="POST" action="/urls/<%= shortURL %>">
+    <label for="updateURL"><h2>ShortURL: <%=shortURL %></h2></label>
+    <input id="newURL" type="text" name="newURL" value= "<%= longURL %>" style= "width: 300px">
+    <button type="submit">Update</button>
+    <ul>
+       <li><%= shortURL %>: <%= longURL %></li>
+    </ul>
+  </form>
+
+</body>
+</html>
