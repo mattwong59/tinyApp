@@ -61,7 +61,7 @@ app.post ("/urls/:id", (req, res) => {
 });
 
 app.post ("/login", (req, res) => {
-  res.cookie(req.body);
+  res.cookie("username",req.body.username);
   res.redirect("/urls");
 });
 
