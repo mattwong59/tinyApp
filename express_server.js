@@ -98,17 +98,30 @@ app.get("/register", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
-  var userID = generateRandomString();
-  res.cookie("user_ID", userID)
-  users[userID] = {id: userID, email: req.body.email, password: req.body.password}
-  console.log(users[userID]);
-  res.redirect("/urls");
+
+  for (let user of Object.values(users)) {
+    if (user.email === req.body.email) {
+      res.statusCode = 400;
+      res.send("Email already exists");
+    };
+  };
+
+  if (req.body.email && req.body.password) {
+    let userID = generateRandomString();
+    res.cookie("user_ID", userID)
+    users[userID] = {id: userID, email: req.body.email, password: req.body.password}
+    res.redirect("/urls");
+    console.log(users[userID]);
+  } else {
+    res.statusCode = 400;
+    res.send("Email or password cannot be empty. Please try again.");
+  };
 });
 
 app.listen(PORT, () => {
   console.log (`Example app listening on port ${PORT}!`);
 });
 
-function generateRandomString () {
+function generateRandomString() {
   return Math.random().toString(36).substr(2,6);
 }
