@@ -32,7 +32,8 @@ app.get("/", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  const currentUser = users[req.cookies["user_ID"]];
+  const user_id = req.cookies.user_ID;
+  const currentUser = users[user_id];
   let templateVars = {
     urls: urlDatabase,
     user: currentUser
@@ -45,7 +46,9 @@ app.get("/urls.json", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  let templateVars = { user: req.cookies["user_ID"] };
+  let templateVars = {
+    user: users[req.cookies["user_ID"]]
+  };
   res.render("urls_new", templateVars);
 });
 
@@ -96,7 +99,7 @@ app.post("/login", (req, res) => {
   };
 
   if(!registeredEmail) {
-    res.send(403);
+    res.statusCode = 403;
     res.redirect("/register")
   };
 
@@ -107,7 +110,7 @@ app.post("/login", (req, res) => {
   };
 
   if(!correctPassword) {
-    res.send(403);
+    res.statusCode = 403;;
     res.redirect("/login");
   };
 
@@ -137,7 +140,7 @@ app.post("/register", (req, res) => {
     };
   };
 
-  if(email && password) {
+  if (email && password) {
     let userID = generateRandomString();
     res.cookie("user_ID", userID);
     users[userID] = {id: userID, email, password};
