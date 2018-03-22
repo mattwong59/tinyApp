@@ -31,10 +31,10 @@ app.get("/", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  console.log(req.cookies)
+  const currentUser = users[req.cookies["user_ID"]];
   let templateVars = {
     urls: urlDatabase,
-    username: req.cookies["username"]
+    user: currentUser
   };
   res.render("urls_index", templateVars);
 });
@@ -44,7 +44,7 @@ app.get("/urls.json", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  let templateVars = { username: req.cookies["username"] };
+  let templateVars = { user: req.cookies["user_ID"] };
   res.render("urls_new", templateVars);
 });
 
@@ -52,7 +52,7 @@ app.get("/urls/:id", (req, res) => {
   let templateVars = {
     shortURL: req.params.id,
     longURL: urlDatabase[req.params.id],
-    username: req.cookies["username"]
+    user: req.cookies["user_ID"]
     };
   res.render("urls_show", templateVars);
 });
@@ -89,7 +89,7 @@ app.post("/login", (req, res) => {
 });
 
 app.post("/logout", (req, res) => {
-  res.clearCookie("username");
+  res.clearCookie("user_ID");
   res.redirect("/urls");
 });
 
@@ -111,11 +111,15 @@ app.post("/register", (req, res) => {
     res.cookie("user_ID", userID)
     users[userID] = {id: userID, email: req.body.email, password: req.body.password}
     res.redirect("/urls");
-    console.log(users[userID]);
   } else {
     res.statusCode = 400;
     res.send("Email or password cannot be empty. Please try again.");
   };
+
+});
+
+app.get("/login", (req, res) => {
+
 });
 
 app.listen(PORT, () => {
