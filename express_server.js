@@ -96,7 +96,7 @@ app.post("/login", (req, res) => {
   };
 
   if(!registeredEmail) {
-    res.setstatusCode = 401;
+    res.send(403);
     res.redirect("/register")
   };
 
@@ -107,7 +107,7 @@ app.post("/login", (req, res) => {
   };
 
   if(!correctPassword) {
-    res.setstatusCode = 401;
+    res.send(403);
     res.redirect("/login");
   };
 
@@ -130,20 +130,20 @@ app.post("/register", (req, res) => {
 
   const {email, password} = req.body;
 
-  for (let user of Object.values(users)) {
+  for(let user of Object.values(users)) {
     if (user.email === email) {
-      res.statusCode = 400;
+      res.sendStatus(400);
       return res.send("Email already exists");
     };
   };
 
-  if (email && password) {
+  if(email && password) {
     let userID = generateRandomString();
     res.cookie("user_ID", userID);
     users[userID] = {id: userID, email, password};
     return res.redirect("/urls");
   } else {
-    res.statusCode = 400;
+    res.sendStatus(400);
     return res.send("Email or password cannot be empty. Please try again.");
   };
  console.log(users);
