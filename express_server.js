@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 
 app.set("view engine", "ejs");
+
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
 
@@ -77,15 +78,43 @@ app.post("/urls/:id/delete", (req, res) => {
   res.redirect("/urls");
 });
 
-
 app.post("/urls/:id", (req, res) => {
   urlDatabase[req.params.id] = req.body.newURL;
   res.redirect ("/urls");
 });
 
 app.post("/login", (req, res) => {
-  res.cookie("username",req.body.username);
-  res.redirect("/urls");
+  let registeredEmail;
+  let correctPassword;
+  let userID;
+
+  for(let user of Object.values(users)) {
+    if(user.email === req.body.email) {
+      registeredEmail = true;
+      userID = user.id;
+    };
+  };
+
+  if(!registeredEmail) {
+    res.setstatusCode = 401;
+    res.redirect("/register")
+  };
+
+  for(let user of Object.values(users)) {
+    if(user.password === req.body.password) {
+      correctPassword = true;
+    };
+  };
+
+  if(!correctPassword) {
+    res.setstatusCode = 401;
+    res.redirect("/login");
+  };
+
+  if(registeredEmail === true && correctPassword === true) {
+    res.cookie("user_ID", userID);
+    return res.redirect("/urls");
+  };
 });
 
 app.post("/logout", (req, res) => {
@@ -99,26 +128,29 @@ app.get("/register", (req, res) => {
 
 app.post("/register", (req, res) => {
 
+  const {email, password} = req.body;
+
   for (let user of Object.values(users)) {
-    if (user.email === req.body.email) {
+    if (user.email === email) {
       res.statusCode = 400;
-      res.send("Email already exists");
+      return res.send("Email already exists");
     };
   };
 
-  if (req.body.email && req.body.password) {
+  if (email && password) {
     let userID = generateRandomString();
-    res.cookie("user_ID", userID)
-    users[userID] = {id: userID, email: req.body.email, password: req.body.password}
-    res.redirect("/urls");
+    res.cookie("user_ID", userID);
+    users[userID] = {id: userID, email, password};
+    return res.redirect("/urls");
   } else {
     res.statusCode = 400;
-    res.send("Email or password cannot be empty. Please try again.");
+    return res.send("Email or password cannot be empty. Please try again.");
   };
-
+ console.log(users);
 });
 
 app.get("/login", (req, res) => {
+  let templateVars = { user: req.cookies["user_ID"] };
   res.render("login");
 });
 
