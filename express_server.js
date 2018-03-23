@@ -13,12 +13,12 @@ const urlDatabase = {
   "b2xVn2": {
     urlID: "b2xVn2",
     url: "https://www.lighthouselabs.ca",
-    uid: "Bob"
+    uid: "userRandomID"
   },
   "9sm5xK": {
-    urlID: "http://www.google.com",
+    urlID: "9sm5xK",
     url: "https://www.google.ca",
-    uid: "John"
+    uid: "user2RandomID"
   }
 }
 
@@ -26,7 +26,7 @@ const users = {
   "userRandomID": {
     id: "userRandomID",
     email: "user@example.com",
-    password: "purple-monkey-dinosaur"
+    password: "1"
   },
   "user2Random": {
     id: "user2RandomID",
@@ -46,6 +46,7 @@ app.get("/urls", (req, res) => {
     urls: urlDatabase,
     user: currentUser
   };
+  console.log(urlDatabase);
   res.render("urls_index", templateVars);
 });
 
@@ -54,11 +55,8 @@ app.get("/urls.json", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  let templateVars = {
-    user: users[req.cookies["user_ID"]]
-  };
   if (req.cookies.user_ID) {
-    res.render("urls_new", templateVars);
+    res.render("urls_new");
   } else {
     res.redirect("/login");
   }
@@ -67,9 +65,10 @@ app.get("/urls/new", (req, res) => {
 app.get("/urls/:id", (req, res) => {
   let templateVars = {
     shortURL: req.params.id,
-    longURL: urlDatabase[req.params.id],
-    user: req.cookies["user_ID"]
-    };
+    longURL: urlDatabase[req.params.id].url,
+    user: req.cookies["user_ID"],
+    creatingUser: urlDatabase[req.params.id].uid
+  };
   res.render("urls_show", templateVars);
 });
 
@@ -78,16 +77,20 @@ app.get("/hello", (req, res) => {
 });
 
 app.get("/u/:shortURL", (req, res) => {
+  let templateVars = {
+    shortURL: req.params.id,
+    longURL: urlDatabase[req.params.id],
+    user: req.cookies["user_ID"]
+  };
   let longURL = urlDatabase[req.params.shortURL];
-  res.redirect(longURL);
+  res.redirect(longURL, templateVars);
 })
 
 app.post("/urls", (req, res) => {
   var key = generateRandomString()
-  urlDatabase[req.cookies.user_ID] = {urlID: key, url: req.body.longURL, uid: req.cookies.user_ID};
-  console.log(urlDatabase[req.cookies.user_ID]);
+  urlDatabase[key] = {urlID: key, url: req.body.longURL, uid: req.cookies.user_ID};
+  console.log(urlDatabase[key].uid);
   console.log(urlDatabase);
-
   res.redirect(`http://localhost:8080/urls/${key}`);
 });
 
@@ -98,7 +101,7 @@ app.post("/urls/:id/delete", (req, res) => {
 });
 
 app.post("/urls/:id", (req, res) => {
-  urlDatabase[req.params.id] = req.body.newURL;
+  urlDatabase[req.params.id].url = req.body.newURL;
   res.redirect ("/urls");
 });
 
@@ -146,7 +149,6 @@ app.get("/register", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
-
   const {email, password} = req.body;
 
   for(let user of Object.values(users)) {
@@ -165,7 +167,6 @@ app.post("/register", (req, res) => {
     res.sendStatus(400);
     return res.send("Email or password cannot be empty. Please try again.");
   };
- console.log(users);
 });
 
 app.get("/login", (req, res) => {
