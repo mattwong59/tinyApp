@@ -49,7 +49,11 @@ app.get("/urls/new", (req, res) => {
   let templateVars = {
     user: users[req.cookies["user_ID"]]
   };
-  res.render("urls_new", templateVars);
+  if (req.cookies.user_ID) {
+    res.render("urls_new", templateVars);
+  } else {
+    res.redirect("/login");
+  }
 });
 
 app.get("/urls/:id", (req, res) => {
@@ -99,7 +103,7 @@ app.post("/login", (req, res) => {
   };
 
   if(!registeredEmail) {
-    res.statusCode = 403;
+    res.send(403);
     res.redirect("/register")
   };
 
@@ -110,7 +114,7 @@ app.post("/login", (req, res) => {
   };
 
   if(!correctPassword) {
-    res.statusCode = 403;;
+    res.send(403);;
     res.redirect("/login");
   };
 
@@ -154,7 +158,7 @@ app.post("/register", (req, res) => {
 
 app.get("/login", (req, res) => {
   let templateVars = { user: req.cookies["user_ID"] };
-  res.render("login");
+  res.render("login", templateVars);
 });
 
 app.listen(PORT, () => {
