@@ -1,14 +1,19 @@
 const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 8080; // default port 8080
-const cookieParser = require("cookie-parser");
+//const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
+const cookieSession = require("cookie-session");
 
 app.set("view engine", "ejs");
 
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(cookieParser());
+//app.use(cookieParser());
+app.use(cookieSession ({
+  name: "session",
+  keys: ["fnjdsiox3nk8nsh3bhcsamhj52"]
+}));
 
 const urlDatabase = {
   "b2xVn2": {
@@ -51,15 +56,16 @@ function urlsForUser(id) {
 }
 
 app.get("/urls", (req, res) => {
-  if (req.cookies.user_ID) {
-  const user_id = req.cookies.user_ID;
-  const currentUser = users[user_id];
-  let userURLs = urlsForUser(user_id);
-  console.log(user_id);
-  console.log(userURLs);
-  let templateVars = {
-    urls: userURLs,
-    user: currentUser
+ // if (req.cookies.user_ID) {                                    /*CHANGE THIS COOKIE*/
+  if (req.session.user_ID) {
+    const user_id = req.session.user_ID;                        /*CHANGE COOKIE*/
+    const currentUser = users[user_id];
+    let userURLs = urlsForUser(user_id);
+    console.log(user_id);
+    console.log(userURLs);
+    let templateVars = {
+      urls: userURLs,
+      user: currentUser
   };
   console.log("Testing user id: ", user_id);
 
@@ -75,7 +81,8 @@ app.get("/urls.json", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  if (req.cookies.user_ID) {
+  //if (req.cookies.user_ID) {                    /*CHANGE COOKIE*/
+    if (req.session.user_ID) {
     res.render("urls_new");
   } else {
     res.redirect("/login");
@@ -86,7 +93,8 @@ app.get("/urls/:id", (req, res) => {
   let templateVars = {
     shortURL: req.params.id,
     longURL: urlDatabase[req.params.id].url,
-    user: req.cookies["user_ID"],
+    //user: req.cookies["user_ID"],                         /*CHANGE COOKIE */
+    user: req.session.user_ID,
     creatingUser: urlDatabase[req.params.id].uid
   };
   res.render("urls_show", templateVars);
@@ -103,7 +111,8 @@ app.get("/u/:shortURL", (req, res) => {
 
 app.post("/urls", (req, res) => {
   var key = generateRandomString()
-  urlDatabase[key] = {urlID: key, url: req.body.longURL, uid: req.cookies.user_ID};
+  //urlDatabase[key] = {urlID: key, url: req.body.longURL, uid: req.cookies.user_ID};       /*CHANGE COOKIE*/
+  urlDatabase[key] = {urlID: key, url: req.body.longURL, uid: req.session.user_ID};
   console.log(urlDatabase[key].uid);
   console.log(urlDatabase);
   res.redirect(`http://localhost:8080/urls/${key}`);
@@ -152,7 +161,8 @@ app.post("/login", (req, res) => {
 
   for(let user of Object.values(users)) {
     if(registeredEmail === true && bcrypt.compareSync(req.body.password, user.password)) {
-      res.cookie("user_ID", userID);
+      //res.cookie("user_ID", userID);
+      req.session.user_ID = userID;
     };
   }
   console.log(users);
@@ -160,7 +170,8 @@ app.post("/login", (req, res) => {
 });
 
 app.post("/logout", (req, res) => {
-  res.clearCookie("user_ID");
+  //res.clearCookie("user_ID");     /*GOOD???*/
+  req.session = null;
   res.redirect("/urls");
 });
 
@@ -180,7 +191,8 @@ app.post("/register", (req, res) => {
 
   if (email && password) {
     let userID = generateRandomString();
-    res.cookie("user_ID", userID);
+    //res.cookie("user_ID", userID);
+    req.session.user_ID = userID;
     users[userID] = {id: userID, email, password: bcrypt.hashSync(password, 10)};
     console.log(users[userID]);
     return res.redirect("/urls");
@@ -191,7 +203,8 @@ app.post("/register", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
-  let templateVars = { user: req.cookies["user_ID"] };
+  //let templateVars = { user: req.cookies["user_ID"] };
+  let templateVars = { user: req.session.user_ID };
   res.render("login", templateVars);
 });
 
