@@ -17,7 +17,7 @@
     <li>
 
      <form method="POST" action="/urls/<%= key %>/delete">
-      <a href="#">http://localhost:8080/<%= key %></a> - (<%= urls[key] %>)
+      <a href="<%= urls[key] %>" target="_blank">http://localhost:8080/<%= key %></a> - (<%= urls[key] %>)
             <a href="/urls/<%= key %>">Edit</a>
             <button type="submit">Delete</button>
       </form>
