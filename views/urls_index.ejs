@@ -12,21 +12,21 @@
   </header>
   <!-- Section for displaying all the short urls and longurls with Delete button -->
   <ul>
+     <% if (user) { %>
     <% Object.keys(urls).forEach(function (key) { %>
     <li>
 
      <form method="POST" action="/urls/<%= key %>/delete">
-      <a href="#">http://localhost:8080/<%= key %></a> - (<%= urls[key].url %>)
+      <a href="#">http://localhost:8080/<%= key %></a> - (<%= urls[key] %>)
             <a href="/urls/<%= key %>">Edit</a>
             <button type="submit">Delete</button>
-    <!--   <% if (user) { %>
-        <a href="/urls/<%= key %>">Edit</a>
-        <button type="submit">Delete</button>
-      <% } %> -->
-
       </form>
     </li>
+
     <%  }); %>
+    <% } else { %>
+       <h4>Please login or register</h4>
+  <% } %>
   <!-- Section finished -->
 
   </ul>

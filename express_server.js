@@ -19,7 +19,7 @@ const urlDatabase = {
     urlID: "9sm5xK",
     url: "https://www.google.ca",
     uid: "user2RandomID"
-  }
+  },
 }
 
 const users = {
@@ -39,15 +39,34 @@ app.get("/", (req, res) => {
   res.end("Hello", templateVars);
 });
 
+function urlsForUser(id) {
+  let userURLs = {};
+  for (let shortURLs in urlDatabase) {
+    if(id === urlDatabase[shortURLs].uid) {
+      userURLs[shortURLs] = urlDatabase[shortURLs].url;
+    }
+  }
+  return userURLs;
+}
+
 app.get("/urls", (req, res) => {
+  if (req.cookies.user_ID) {
   const user_id = req.cookies.user_ID;
   const currentUser = users[user_id];
+  let userURLs = urlsForUser(user_id);
+  console.log(user_id);
+  console.log(userURLs);
   let templateVars = {
-    urls: urlDatabase,
+    urls: userURLs,
     user: currentUser
   };
-  console.log(urlDatabase);
+  console.log("Testing user id: ", user_id);
+
+  //console.log(urlDatabase);
   res.render("urls_index", templateVars);
+  } else {
+    res.redirect('/login');
+  }
 });
 
 app.get("/urls.json", (req, res) => {
@@ -77,13 +96,8 @@ app.get("/hello", (req, res) => {
 });
 
 app.get("/u/:shortURL", (req, res) => {
-  let templateVars = {
-    shortURL: req.params.id,
-    longURL: urlDatabase[req.params.id],
-    user: req.cookies["user_ID"]
-  };
-  let longURL = urlDatabase[req.params.shortURL];
-  res.redirect(longURL, templateVars);
+  let longURL = urlDatabase[req.params.shortURL].url;
+  res.redirect(longURL);
 })
 
 app.post("/urls", (req, res) => {
@@ -92,6 +106,7 @@ app.post("/urls", (req, res) => {
   console.log(urlDatabase[key].uid);
   console.log(urlDatabase);
   res.redirect(`http://localhost:8080/urls/${key}`);
+
 });
 
 
