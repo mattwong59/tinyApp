@@ -3,6 +3,7 @@ const app = express();
 const PORT = process.env.PORT || 8080; // default port 8080
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
+const bcrypt = require('bcrypt');
 
 app.set("view engine", "ejs");
 
@@ -139,19 +140,23 @@ app.post("/login", (req, res) => {
 
   for(let user of Object.values(users)) {
     if(user.password === req.body.password) {
+      if(!correctPassword) {
+        res.send(403);
+        res.redirect("/login");
+      };
       correctPassword = true;
     };
   };
 
-  if(!correctPassword) {
-    res.send(403);;
-    res.redirect("/login");
-  };
 
-  if(registeredEmail === true && correctPassword === true) {
-    res.cookie("user_ID", userID);
-    return res.redirect("/urls");
-  };
+
+  for(let user of Object.values(users)) {
+    if(registeredEmail === true && bcrypt.compareSync(req.body.password, user.password)) {
+      res.cookie("user_ID", userID);
+    };
+  }
+  console.log(users);
+  res.redirect("/urls");
 });
 
 app.post("/logout", (req, res) => {
@@ -176,7 +181,8 @@ app.post("/register", (req, res) => {
   if (email && password) {
     let userID = generateRandomString();
     res.cookie("user_ID", userID);
-    users[userID] = {id: userID, email, password};
+    users[userID] = {id: userID, email, password: bcrypt.hashSync(password, 10)};
+    console.log(users[userID]);
     return res.redirect("/urls");
   } else {
     res.sendStatus(400);
