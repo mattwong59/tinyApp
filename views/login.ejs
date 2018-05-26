@@ -7,14 +7,22 @@
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
       <script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
   </head>
-    <body style="font-size: 20px; padding: 50px;">
-
+  <body style="font-size: 20px; padding: 50px;">
+    <section class="hero is-medium">
+        <div class="hero-body">
+          <div class="container">
+            <h1 class="title">
+              Welcome to Tiny App
+            </h1>
+          </div>
+        </div>
+      </section>
       <form method="POST" action="/login"  style="margin: 150px;">
         <h1>Login</h1>
-        <label for="email">E-mail</label>
-        <input id="email" type="email" name="email" placeholder="E-mail" style="width: 300px">
-        <label for="password">Password</label>
-        <input id="password" type="password" name="password" placeholder="Password" style="width: 300px">
+        <label class="label" for="email">E-mail</label>
+        <input class="input is-large" type="email" id="email" type="email" name="email" placeholder="user@email.com" style="width: 300px">
+        <label class="label" for="password">Password</label>
+        <input class="input is-large" type="password" id="password" type="password" name="password" placeholder="Password" style="width: 300px">
         <input type="submit" value="Submit">
         <a href="/register">Not a member? Click here to register</a>
       </form>
