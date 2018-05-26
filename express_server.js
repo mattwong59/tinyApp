@@ -68,7 +68,7 @@ function generateRandomString() {
 }
 
 app.get("/", (req, res) => {
-  res.end("Hello", templateVars);
+  res.redirect("/urls");
 });
 
 app.get("/urls", (req, res) => {
