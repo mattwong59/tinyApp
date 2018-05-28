@@ -1,11 +1,30 @@
-<h1>Your Short URLs</h1>
+<!-- <h1>Your Short URLs</h1> -->
 
 
 <% if (user) { %>
-  <form method="POST" action="/logout">
-    <label for="username"><h2>Username: <%= user.email %></h2></label>
-    <button type="submit">Logout</button>
-  </form>
+  <section class="hero is-primary is-medium">
+    <div class="hero-head">
+        <nav class="navbar">
+          <div class="container">
+            <div id="navbarMenuHeroA" class="navbar-menu">
+              <div class="navbar-end">
+                <form class="navbar-item" method="POST" action="/logout">
+                  <button class="button is-medium is-white is-outlined" type="submit">Logout</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </div>
+      <div class="hero-body">
+        <div class="container">
+          <h1 class="title is-size-1">
+            Welcome <%= user.email %>
+          </h1>
+        </div>
+      </div>
+    </section>
+  
 <% } else { %>
   <a href="/register"><h2>Register</h2></a>
   <a href="/login"><h2>Login</h2></a>

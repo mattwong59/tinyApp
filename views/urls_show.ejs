@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>TinyApp</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tiny App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script></title>
 </head>
 <body>
 
@@ -10,12 +14,12 @@
   </header>
 
 <% if (user.id === creatingUser) { %>
-  <form method="POST" action="/urls/<%= shortURL %>">
-    <label for="updateURL"><h2>ShortURL: <%=shortURL %></h2></label>
-    <input id="newURL" type="text" name="newURL" value= "<%= longURL %>"  style= "width: 300px">
-    <button type="submit">Update</button>
+  <form class="container" method="POST" action="/urls/<%= shortURL %>">
+    <label class="label" for="updateURL"><h2 class="is-size-4 is-italic">ShortURL: <%=shortURL %></h2></label>
+    <input class="input is-large" id="newURL" type="text" name="newURL" value= "<%= longURL %>"  style= "width: 300px" autofocus>
+    <button class="button is-medium is-info is-outlined" type="submit">Update</button>
     <ul>
-       <li><%= shortURL %>: <%= longURL %></li>
+       <li class="is-size-4"><%= shortURL %>: <%= longURL %></li>
     </ul>
   </form>
   <% } else {%>

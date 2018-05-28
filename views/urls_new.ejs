@@ -1,14 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>Tiny App</head>
-  <body style="font-size: 20px; padding: 50px;">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tiny App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
+  </head>
+  <body>
     <header>
       <% include ./partials/_header.ejs %>
     </header>
     <form action="/urls" method="POST" style="margin: 150px;">
-      <label for="longURL">Enter a URL:</label>
-      <input id="longURL" type="text" name="longURL" value="http://" style="width: 300px">
-      <input type="submit" value="Submit">
+      <label class="label" for="longURL">Enter a URL:</label>
+      <input class="input is-large" id="longURL" type="text" name="longURL" value="http://" style="width: 300px" autofocus >
+      <input class="button is-medium is-primary is-outlined" type="submit" value="Submit">
     </form>
 
 

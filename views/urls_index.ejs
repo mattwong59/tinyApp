@@ -1,35 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>TinyApp</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tiny App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
 </head>
 <body>
-
-
-
   <header>
     <% include ./partials/_header.ejs %>
   </header>
   <!-- Section for displaying all the short urls and longurls with Delete button -->
-  <ul>
-     <% if (user) { %>
-    <% Object.keys(urls).forEach(function (key) { %>
-    <li>
+  <div class="container">
+    <ul>
+      <% if (user) { %>
+      <% Object.keys(urls).forEach(function (key) { %>
+      <li>
 
-     <form method="POST" action="/urls/<%= key %>/delete">
-      <a href="<%= urls[key] %>" target="_blank">http://localhost:8080/<%= key %></a> - (<%= urls[key] %>)
-            <a href="/urls/<%= key %>">Edit</a>
-            <button type="submit">Delete</button>
-      </form>
-    </li>
+      <form method="POST" action="/urls/<%= key %>/delete">
+        <div class="is-size-4">
+          <a class="is-size-4" href="<%= urls[key] %>" target="_blank">http://localhost:8080/<%= key %></a> 
+          - (<%= urls[key] %>)
+          <a class="button is-medium is-info is-outlined" href="/urls/<%= key %>">Edit</a>
+          <button class="button is-medium is-danger is-outlined" type="submit">Delete</button>
+        </div>
+              
+        </form>
+      </li>
 
-    <%  }); %>
-    <% } else { %>
-       <h4>Please login or register</h4>
-  <% } %>
-  <!-- Section finished -->
+      <%  }); %>
+      <% } else { %>
+        <h4>Please login or register</h4>
+    <% } %>
+    <!-- Section finished -->
 
-  </ul>
-  <a href="/urls/new">Shorten New URL</a>
+    </ul>
+    <a class="button is-primary is-outlined is-size-4" href="/urls/new">Shorten New URL</a>
+  </div>
 </body>
 </html>
